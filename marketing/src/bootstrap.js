@@ -1,10 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { createMemoryHistory } from 'history';
 
 // Mount function to start up the app
-const mount = (el) => {
-  ReactDOM.render(<App />, el);
+const mount = (el, { onNavigate }) => {
+  const history = createMemoryHistory();
+
+  if (onNavigate) {
+    history.listen(onNavigate);
+  }
+  ReactDOM.render(<App history={history} />, el);
 };
 
 // If we are in development and in isolation,
@@ -13,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
   const devRoot = document.querySelector('#_marketing-dev-root');
 
   if (devRoot) {
-    mount(devRoot);
+    mount(devRoot, {});
   }
 }
 
